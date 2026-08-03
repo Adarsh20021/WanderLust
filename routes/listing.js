@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
-const { listingSchema, reviewSchema } = require("../schema.js");
+const { listingSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
 
 //ValidationSchema using Middleware
@@ -40,6 +40,9 @@ router.post("/",validateListing,wrapAsync(async(req,res)=>{
     //     throw new ExpressError(400,"Send Valid data for listing!");
     // }
     //let {title,description,image,price,country,location} = req.body;
+    if (req.body.listing.image.url.trim() === "") {
+        delete req.body.listing.image;
+    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
