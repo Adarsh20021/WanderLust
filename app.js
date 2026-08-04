@@ -52,6 +52,7 @@ app.use(flash());                       //must be used before u require routes.
 
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     next();
 });
 
