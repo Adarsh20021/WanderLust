@@ -7,6 +7,7 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const { error } = require("console");
 const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
@@ -41,11 +42,17 @@ const sessionOptions = {
     },
 };
 
-app.use(session(sessionOptions));
-
 //Root route
 app.get("/",(req,res)=>{
     res.send("Hi i am root.");
+});
+
+app.use(session(sessionOptions));
+app.use(flash());                       //must be used before u require routes.
+
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    next();
 });
 
 //Single line used for all listings and review routes.
